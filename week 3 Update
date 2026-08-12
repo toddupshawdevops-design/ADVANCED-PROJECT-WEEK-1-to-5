@@ -1,0 +1,1433 @@
+/*
+ * ============================================================
+ * PROJECT WEEK 3
+ * Abstraction, Constructors, and Access Specifiers
+ *
+ * Name: Todd Upshaw
+ * Date: August 11, 2026
+ *
+ * Purpose:
+ * This application builds upon the Week 2 IT Asset Management
+ * System. It demonstrates abstraction, constructors,
+ * inheritance, access specifiers, interfaces, composition,
+ * and polymorphism.
+ *
+ * The application manages laptops and servers while using an
+ * abstract Asset base class to define common functionality.
+ * ============================================================
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+/*
+ * ============================================================
+ * ABSTRACT BASE CLASS
+ * ============================================================
+ *
+ * ABSTRACTION:
+ *
+ * Asset is abstract because a generic "Asset" does not need
+ * to be instantiated directly. Instead, specific asset types
+ * such as Laptop and Server inherit from Asset.
+ *
+ * The abstract methods require child classes to provide their
+ * own implementations.
+ */
+public abstract class Asset {
+
+    /*
+     * ACCESS SPECIFIER:
+     *
+     * Private data can only be directly accessed inside Asset.
+     * This protects the object's internal data.
+     */
+    private String assetId;
+
+    private String description;
+
+    private String assignedTo;
+
+
+    /*
+     * ========================================================
+     * INTERFACE FROM WEEK 2
+     * ========================================================
+     *
+     * The interface provides a common reporting contract.
+     */
+    public interface Reportable {
+
+        String generateReport();
+    }
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR #1
+     * ========================================================
+     *
+     * Default constructor.
+     *
+     * This demonstrates a no-argument constructor.
+     */
+    public Asset() {
+
+        this.assetId = "UNASSIGNED";
+
+        this.description = "Unknown Asset";
+
+        this.assignedTo = "Unassigned";
+    }
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR #2
+     * ========================================================
+     *
+     * Parameterized constructor.
+     *
+     * This constructor allows the caller to provide realistic
+     * asset information when creating an object.
+     */
+    public Asset(
+            String assetId,
+            String description,
+            String assignedTo) {
+
+        this.assetId = assetId;
+
+        this.description = description;
+
+        this.assignedTo = assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR #3
+     * ========================================================
+     *
+     * Overloaded constructor.
+     *
+     * This demonstrates constructor overloading.
+     */
+    public Asset(
+            String assetId,
+            String description) {
+
+        this.assetId = assetId;
+
+        this.description = description;
+
+        this.assignedTo = "Unassigned";
+    }
+
+
+    /*
+     * ========================================================
+     * ACCESSORS
+     * ========================================================
+     *
+     * The fields remain private.
+     *
+     * Public getter methods provide controlled access to the
+     * information outside the class.
+     */
+
+    public String getAssetId() {
+
+        return assetId;
+    }
+
+
+    public String getDescription() {
+
+        return description;
+    }
+
+
+    public String getAssignedTo() {
+
+        return assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * MUTATOR
+     * ========================================================
+     *
+     * Public because other parts of the application need to
+     * update the assigned employee/team.
+     */
+
+    public void setAssignedTo(String assignedTo) {
+
+        this.assignedTo = assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * PROTECTED METHOD
+     * ========================================================
+     *
+     * Protected allows the base class and child classes to
+     * access this functionality.
+     *
+     * This is an example of appropriate use of protected
+     * access.
+     */
+    protected String getBasicAssetInformation() {
+
+        return assetId
+                + " | "
+                + description
+                + " | Assigned to: "
+                + assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * ABSTRACT METHOD #1
+     * ========================================================
+     *
+     * ABSTRACTION:
+     *
+     * Every child asset must identify its asset type.
+     *
+     * Asset does not define the exact answer.
+     *
+     * Laptop and Server provide the implementation.
+     */
+    public abstract String getAssetType();
+
+
+    /*
+     * ========================================================
+     * ABSTRACT METHOD #2
+     * ========================================================
+     *
+     * ABSTRACTION:
+     *
+     * Every reportable asset must generate a report.
+     *
+     * The child classes determine what their reports contain.
+     */
+    public abstract String generateReport();
+
+
+    /*
+     * ========================================================
+     * DISPLAY METHOD
+     * ========================================================
+     *
+     * This method provides common behavior for all assets.
+     */
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s",
+                assetId,
+                getAssetType(),
+                description,
+                assignedTo
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * MAIN METHOD
+     * ========================================================
+     */
+
+    public static void main(String[] args) {
+
+        Scanner scanner =
+                new Scanner(System.in);
+
+
+        /*
+         * COMPOSITION:
+         *
+         * AssetInventory contains Asset objects.
+         */
+        AssetInventory inventory =
+                new AssetInventory();
+
+
+        /*
+         * ====================================================
+         * CONSTRUCTORS
+         * ====================================================
+         *
+         * These objects demonstrate the parameterized
+         * constructors of the child classes.
+         */
+
+        Laptop laptop1 =
+                new Laptop(
+                        "LAP-1001",
+                        "Dell Latitude 5540",
+                        "Sarah Johnson",
+                        "Windows 11 Pro"
+                );
+
+
+        Laptop laptop2 =
+                new Laptop(
+                        "LAP-1002",
+                        "Lenovo ThinkPad T14",
+                        "Michael Carter",
+                        "Windows 11 Pro"
+                );
+
+
+        Server server1 =
+                new Server(
+                        "SRV-2001",
+                        "Application Server",
+                        "DevOps Team",
+                        "Production"
+                );
+
+
+        /*
+         * Demonstrate an overloaded child constructor.
+         */
+        Laptop laptop3 =
+                new Laptop(
+                        "LAP-1003",
+                        "HP EliteBook 840"
+                );
+
+
+        /*
+         * Add objects to the inventory.
+         *
+         * COMPOSITION:
+         */
+        inventory.addAsset(laptop1);
+
+        inventory.addAsset(laptop2);
+
+        inventory.addAsset(laptop3);
+
+        inventory.addAsset(server1);
+
+
+        /*
+         * ====================================================
+         * WELCOME SCREEN
+         * ====================================================
+         */
+
+        System.out.println();
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println(
+                "                       PROJECT WEEK 3"
+        );
+
+        System.out.println(
+                "          ABSTRACTION, CONSTRUCTORS & ACCESS"
+        );
+
+        System.out.println(
+                "                       SPECIFIERS"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "                IT ASSET MANAGEMENT SYSTEM"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "                       Todd Upshaw"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Welcome to Project Week 3!"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "This application demonstrates:"
+        );
+
+        System.out.println(
+                "  1. Abstraction"
+        );
+
+        System.out.println(
+                "  2. Constructors"
+        );
+
+        System.out.println(
+                "  3. Access Specifiers"
+        );
+
+        System.out.println(
+                "  4. Inheritance"
+        );
+
+        System.out.println(
+                "  5. Interfaces"
+        );
+
+        System.out.println(
+                "  6. Composition"
+        );
+
+        System.out.println(
+                "  7. Polymorphism"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Use the menu to explore the Week 3 implementation."
+        );
+
+
+        /*
+         * ====================================================
+         * MAIN MENU
+         * ====================================================
+         */
+
+        boolean running = true;
+
+
+        while (running) {
+
+            System.out.println();
+
+            System.out.println(
+                    "----------------------- MAIN MENU ----------------------------"
+            );
+
+            System.out.println(
+                    "1. Display all assets"
+            );
+
+            System.out.println(
+                    "2. Generate asset reports"
+            );
+
+            System.out.println(
+                    "3. Demonstrate abstraction"
+            );
+
+            System.out.println(
+                    "4. Demonstrate constructors"
+            );
+
+            System.out.println(
+                    "5. Demonstrate access specifiers"
+            );
+
+            System.out.println(
+                    "6. Demonstrate inheritance and polymorphism"
+            );
+
+            System.out.println(
+                    "7. Display complete design summary"
+            );
+
+            System.out.println(
+                    "8. Exit"
+            );
+
+            System.out.println(
+                    "--------------------------------------------------------------"
+            );
+
+            System.out.print(
+                    "Enter your selection: "
+            );
+
+
+            String choice =
+                    scanner.nextLine();
+
+
+            switch (choice) {
+
+
+                /*
+                 * =================================================
+                 * OPTION 1
+                 * =================================================
+                 */
+
+                case "1":
+
+                    inventory.displayAllAssets();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 2
+                 * =================================================
+                 */
+
+                case "2":
+
+                    inventory.generateAllReports();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 3
+                 * =================================================
+                 *
+                 * ABSTRACTION DEMONSTRATION
+                 */
+
+                case "3":
+
+                    displayAbstractionInformation();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 4
+                 * =================================================
+                 *
+                 * CONSTRUCTOR DEMONSTRATION
+                 */
+
+                case "4":
+
+                    displayConstructorInformation();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 5
+                 * =================================================
+                 *
+                 * ACCESS SPECIFIER DEMONSTRATION
+                 */
+
+                case "5":
+
+                    displayAccessSpecifierInformation();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 6
+                 * =================================================
+                 *
+                 * INHERITANCE AND POLYMORPHISM
+                 */
+
+                case "6":
+
+                    inventory.demonstratePolymorphism();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 7
+                 * =================================================
+                 */
+
+                case "7":
+
+                    displayDesignSummary();
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * OPTION 8
+                 * =================================================
+                 */
+
+                case "8":
+
+                    running = false;
+
+                    System.out.println();
+
+                    System.out.println(
+                            "=============================================================="
+                    );
+
+                    System.out.println(
+                            "Thank you for using the IT Asset Management System."
+                    );
+
+                    System.out.println(
+                            "Project Week 3 complete."
+                    );
+
+                    System.out.println(
+                            "Goodbye, Todd!"
+                    );
+
+                    System.out.println(
+                            "=============================================================="
+                    );
+
+                    break;
+
+
+                /*
+                 * =================================================
+                 * INVALID OPTION
+                 * =================================================
+                 */
+
+                default:
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Invalid selection."
+                    );
+
+                    System.out.println(
+                            "Please enter a number from 1 through 8."
+                    );
+            }
+        }
+
+
+        scanner.close();
+    }
+
+
+    /*
+     * ========================================================
+     * ABSTRACTION INFORMATION
+     * ========================================================
+     */
+
+    private static void displayAbstractionInformation() {
+
+        System.out.println();
+
+        System.out.println(
+                "---------------------- ABSTRACTION -------------------------"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Abstract Base Class:"
+        );
+
+        System.out.println(
+                "Asset"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Abstract Methods:"
+        );
+
+        System.out.println(
+                "getAssetType()"
+        );
+
+        System.out.println(
+                "generateReport()"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Purpose:"
+        );
+
+        System.out.println(
+                "Asset defines common behavior without specifying"
+        );
+
+        System.out.println(
+                "the exact implementation for every asset type."
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Child classes:"
+        );
+
+        System.out.println(
+                "Laptop and Server"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Each child class provides its own implementation"
+        );
+
+        System.out.println(
+                "of the abstract methods."
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "BENEFIT:"
+        );
+
+        System.out.println(
+                "The application can manage different asset types"
+        );
+
+        System.out.println(
+                "through one common Asset design."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR INFORMATION
+     * ========================================================
+     */
+
+    private static void displayConstructorInformation() {
+
+        System.out.println();
+
+        System.out.println(
+                "---------------------- CONSTRUCTORS ------------------------"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Asset constructors:"
+        );
+
+        System.out.println(
+                "1. Default constructor"
+        );
+
+        System.out.println(
+                "2. Three-parameter constructor"
+        );
+
+        System.out.println(
+                "3. Two-parameter overloaded constructor"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Laptop constructors:"
+        );
+
+        System.out.println(
+                "1. Four-parameter constructor"
+        );
+
+        System.out.println(
+                "2. Two-parameter overloaded constructor"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Server constructor:"
+        );
+
+        System.out.println(
+                "Four-parameter constructor"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Constructors initialize objects with realistic"
+        );
+
+        System.out.println(
+                "information when they are created."
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Constructor overloading allows objects to be"
+        );
+
+        System.out.println(
+                "created using different sets of information."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * ACCESS SPECIFIER INFORMATION
+     * ========================================================
+     */
+
+    private static void displayAccessSpecifierInformation() {
+
+        System.out.println();
+
+        System.out.println(
+                "------------------- ACCESS SPECIFIERS ----------------------"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "PRIVATE:"
+        );
+
+        System.out.println(
+                "Asset data fields are private."
+        );
+
+        System.out.println(
+                "Example: assetId, description, assignedTo"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "PROTECTED:"
+        );
+
+        System.out.println(
+                "getBasicAssetInformation() is protected."
+        );
+
+        System.out.println(
+                "This allows derived classes to use the method."
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "PUBLIC:"
+        );
+
+        System.out.println(
+                "Getters, setters, constructors, and required"
+        );
+
+        System.out.println(
+                "application methods are public."
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "DESIGN PRINCIPLE:"
+        );
+
+        System.out.println(
+                "Only the information and functionality needed"
+        );
+
+        System.out.println(
+                "outside the class is exposed publicly."
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * DESIGN SUMMARY
+     * ========================================================
+     */
+
+    private static void displayDesignSummary() {
+
+        System.out.println();
+
+        System.out.println(
+                "------------------- WEEK 3 DESIGN --------------------------"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "ABSTRACTION:"
+        );
+
+        System.out.println(
+                "abstract Asset class"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "INHERITANCE:"
+        );
+
+        System.out.println(
+                "Laptop and Server extend Asset"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "INTERFACE:"
+        );
+
+        System.out.println(
+                "Reportable"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "COMPOSITION:"
+        );
+
+        System.out.println(
+                "AssetInventory contains Asset objects"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "POLYMORPHISM:"
+        );
+
+        System.out.println(
+                "Asset references can represent Laptop or Server"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "CONSTRUCTORS:"
+        );
+
+        System.out.println(
+                "Default, parameterized, and overloaded constructors"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "ACCESS SPECIFIERS:"
+        );
+
+        System.out.println(
+                "Private, protected, and public"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "The design provides a maintainable foundation for"
+        );
+
+        System.out.println(
+                "continuing the final IT Asset Management project."
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * LAPTOP CLASS
+ * ============================================================
+ *
+ * INHERITANCE:
+ *
+ * Laptop inherits from the abstract Asset class.
+ *
+ * INTERFACE:
+ *
+ * Laptop implements Reportable.
+ */
+class Laptop
+        extends Asset
+        implements Asset.Reportable {
+
+
+    /*
+     * PRIVATE:
+     *
+     * Operating system is internal Laptop data.
+     */
+    private String operatingSystem;
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR #1
+     * ========================================================
+     *
+     * Parameterized constructor.
+     */
+
+    public Laptop(
+            String assetId,
+            String description,
+            String assignedTo,
+            String operatingSystem) {
+
+        super(
+                assetId,
+                description,
+                assignedTo
+        );
+
+        this.operatingSystem =
+                operatingSystem;
+    }
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR #2
+     * ========================================================
+     *
+     * Overloaded constructor.
+     *
+     * This demonstrates constructor overloading.
+     */
+
+    public Laptop(
+            String assetId,
+            String description) {
+
+        super(
+                assetId,
+                description
+        );
+
+        this.operatingSystem =
+                "Not Specified";
+    }
+
+
+    /*
+     * ========================================================
+     * GETTER
+     * ========================================================
+     */
+
+    public String getOperatingSystem() {
+
+        return operatingSystem;
+    }
+
+
+    /*
+     * ========================================================
+     * ABSTRACT METHOD IMPLEMENTATION
+     * ========================================================
+     *
+     * The abstract Asset method requires each child class
+     * to identify its own asset type.
+     */
+
+    @Override
+    public String getAssetType() {
+
+        return "Laptop";
+    }
+
+
+    /*
+     * ========================================================
+     * INTERFACE IMPLEMENTATION
+     * ========================================================
+     *
+     * Laptop implements generateReport() from Reportable.
+     */
+
+    @Override
+    public String generateReport() {
+
+        return "Laptop Report: "
+                + getBasicAssetInformation()
+                + " | OS: "
+                + operatingSystem;
+    }
+
+
+    /*
+     * ========================================================
+     * POLYMORPHISM
+     * ========================================================
+     *
+     * Laptop provides its own displayInfo() implementation.
+     */
+
+    @Override
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s OS: %s",
+                getAssetId(),
+                getAssetType(),
+                getDescription(),
+                getAssignedTo(),
+                operatingSystem
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * SERVER CLASS
+ * ============================================================
+ *
+ * INHERITANCE:
+ *
+ * Server inherits from the abstract Asset class.
+ *
+ * INTERFACE:
+ *
+ * Server implements Reportable.
+ */
+class Server
+        extends Asset
+        implements Asset.Reportable {
+
+
+    /*
+     * PRIVATE:
+     *
+     * Environment is internal Server data.
+     */
+    private String environment;
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR
+     * ========================================================
+     */
+
+    public Server(
+            String assetId,
+            String description,
+            String assignedTo,
+            String environment) {
+
+        super(
+                assetId,
+                description,
+                assignedTo
+        );
+
+        this.environment =
+                environment;
+    }
+
+
+    /*
+     * ========================================================
+     * GETTER
+     * ========================================================
+     */
+
+    public String getEnvironment() {
+
+        return environment;
+    }
+
+
+    /*
+     * ========================================================
+     * ABSTRACT METHOD IMPLEMENTATION
+     * ========================================================
+     */
+
+    @Override
+    public String getAssetType() {
+
+        return "Server";
+    }
+
+
+    /*
+     * ========================================================
+     * INTERFACE IMPLEMENTATION
+     * ========================================================
+     */
+
+    @Override
+    public String generateReport() {
+
+        return "Server Report: "
+                + getBasicAssetInformation()
+                + " | Environment: "
+                + environment;
+    }
+
+
+    /*
+     * ========================================================
+     * POLYMORPHISM
+     * ========================================================
+     */
+
+    @Override
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s Environment: %s",
+                getAssetId(),
+                getAssetType(),
+                getDescription(),
+                getAssignedTo(),
+                environment
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * ASSET INVENTORY CLASS
+ * ============================================================
+ *
+ * COMPOSITION:
+ *
+ * AssetInventory contains a List of Asset objects.
+ *
+ * Because Asset is abstract, the list can contain any concrete
+ * subclass such as Laptop or Server.
+ */
+class AssetInventory {
+
+
+    /*
+     * PRIVATE:
+     *
+     * The collection is kept private to protect the inventory's
+     * internal data.
+     */
+    private final List<Asset> assets;
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR
+     * ========================================================
+     */
+
+    public AssetInventory() {
+
+        assets =
+                new ArrayList<>();
+    }
+
+
+    /*
+     * ========================================================
+     * ADD ASSET
+     * ========================================================
+     */
+
+    public void addAsset(Asset asset) {
+
+        assets.add(asset);
+    }
+
+
+    /*
+     * ========================================================
+     * DISPLAY ALL ASSETS
+     * ========================================================
+     *
+     * POLYMORPHISM:
+     *
+     * Asset is an abstract base-class reference.
+     *
+     * The actual objects are Laptop and Server.
+     *
+     * Java determines which displayInfo() implementation
+     * should execute at runtime.
+     */
+
+    public void displayAllAssets() {
+
+        System.out.println();
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println(
+                "                    IT ASSET INVENTORY"
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+
+
+        System.out.printf(
+                "%-10s %-12s %-25s %-20s%n",
+                "ID",
+                "TYPE",
+                "DESCRIPTION",
+                "ASSIGNED TO"
+        );
+
+
+        System.out.println(
+                "--------------------------------------------------------------"
+        );
+
+
+        for (Asset asset : assets) {
+
+            System.out.println(
+                    asset.displayInfo()
+            );
+        }
+
+
+        System.out.println(
+                "=============================================================="
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * GENERATE REPORTS
+     * ========================================================
+     *
+     * POLYMORPHISM + INTERFACE:
+     *
+     * Each Asset is also a Reportable object because the
+     * concrete child classes implement the interface.
+     */
+
+    public void generateAllReports() {
+
+        System.out.println();
+
+        System.out.println(
+                "-------------------- ASSET REPORTS -------------------------"
+        );
+
+        System.out.println();
+
+
+        for (Asset asset : assets) {
+
+            Asset.Reportable report =
+                    (Asset.Reportable) asset;
+
+
+            System.out.println(
+                    report.generateReport()
+            );
+        }
+
+
+        System.out.println();
+    }
+
+
+    /*
+     * ========================================================
+     * POLYMORPHISM DEMONSTRATION
+     * ========================================================
+     */
+
+    public void demonstratePolymorphism() {
+
+        System.out.println();
+
+        System.out.println(
+                "------------------- POLYMORPHISM ---------------------------"
+        );
+
+        System.out.println();
+
+
+        for (Asset asset : assets) {
+
+            System.out.println(
+                    "Reference Type: Asset"
+            );
+
+            System.out.println(
+                    "Actual Object: "
+                    + asset.getClass().getSimpleName()
+            );
+
+            System.out.println(
+                    "Asset Type: "
+                    + asset.getAssetType()
+            );
+
+
+            Asset.Reportable report =
+                    (Asset.Reportable) asset;
+
+
+            System.out.println(
+                    "Generated Report:"
+            );
+
+            System.out.println(
+                    report.generateReport()
+            );
+
+            System.out.println(
+                    "--------------------------------------------------------------"
+            );
+        }
+
+
+        System.out.println();
+
+        System.out.println(
+                "POLYMORPHISM SUCCESSFULLY DEMONSTRATED."
+        );
+    }
+}
