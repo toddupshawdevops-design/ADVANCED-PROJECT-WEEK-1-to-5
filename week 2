@@ -1,0 +1,947 @@
+/*
+ * ============================================================
+ * PROJECT WEEK 2
+ * Software Design; Interfaces & Polymorphism
+ *
+ * Name: Todd Upshaw
+ * Date: August 11, 2026
+ *
+ * Purpose:
+ * This application demonstrates inheritance, composition,
+ * interfaces, and polymorphism using an IT Asset Management
+ * System.
+ * ============================================================
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+/*
+ * ============================================================
+ * BASE CLASS / MAIN PROGRAM
+ * ============================================================
+ */
+public class Asset {
+
+    private String assetId;
+    private String description;
+    private String assignedTo;
+
+
+    /*
+     * ========================================================
+     * INTERFACE
+     * ========================================================
+     *
+     * Reportable defines a common reporting behavior.
+     *
+     * This is our Week 2 INTERFACE demonstration.
+     */
+    public interface Reportable {
+
+        String generateReport();
+    }
+
+
+    /*
+     * ========================================================
+     * CONSTRUCTOR
+     * ========================================================
+     */
+
+    public Asset(
+            String assetId,
+            String description,
+            String assignedTo) {
+
+        this.assetId = assetId;
+        this.description = description;
+        this.assignedTo = assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * GETTERS
+     * ========================================================
+     */
+
+    public String getAssetId() {
+
+        return assetId;
+    }
+
+
+    public String getDescription() {
+
+        return description;
+    }
+
+
+    public String getAssignedTo() {
+
+        return assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * SETTER
+     * ========================================================
+     */
+
+    public void setAssignedTo(String assignedTo) {
+
+        this.assignedTo = assignedTo;
+    }
+
+
+    /*
+     * ========================================================
+     * ASSET TYPE
+     * ========================================================
+     */
+
+    public String getAssetType() {
+
+        return "General Asset";
+    }
+
+
+    /*
+     * ========================================================
+     * DISPLAY INFORMATION
+     * ========================================================
+     */
+
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s",
+                assetId,
+                getAssetType(),
+                description,
+                assignedTo
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * MAIN METHOD
+     * ========================================================
+     */
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+
+        /*
+         * COMPOSITION:
+         *
+         * AssetInventory contains Asset objects.
+         */
+        AssetInventory inventory =
+                new AssetInventory();
+
+
+        /*
+         * ====================================================
+         * CREATE REALISTIC OBJECTS
+         * ====================================================
+         *
+         * INHERITANCE:
+         *
+         * Laptop and Server extend Asset.
+         */
+
+        Laptop laptop1 =
+                new Laptop(
+                        "LAP-1001",
+                        "Dell Latitude 5540",
+                        "Sarah Johnson",
+                        "Windows 11 Pro"
+                );
+
+
+        Laptop laptop2 =
+                new Laptop(
+                        "LAP-1002",
+                        "Lenovo ThinkPad T14",
+                        "Michael Carter",
+                        "Windows 11 Pro"
+                );
+
+
+        Server server1 =
+                new Server(
+                        "SRV-2001",
+                        "Application Server",
+                        "DevOps Team",
+                        "Production"
+                );
+
+
+        /*
+         * COMPOSITION:
+         *
+         * Add the objects to the AssetInventory.
+         */
+        inventory.addAsset(laptop1);
+        inventory.addAsset(laptop2);
+        inventory.addAsset(server1);
+
+
+        /*
+         * ====================================================
+         * WELCOME SCREEN
+         * ====================================================
+         */
+
+        System.out.println();
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println(
+                "                       PROJECT WEEK 2"
+        );
+
+        System.out.println(
+                "              SOFTWARE DESIGN; INTERFACES &"
+        );
+
+        System.out.println(
+                "                    POLYMORPHISM"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "                IT ASSET MANAGEMENT SYSTEM"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "                       Todd Upshaw"
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Welcome to Week 2!"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "This application demonstrates:"
+        );
+
+        System.out.println(
+                "  - Inheritance"
+        );
+
+        System.out.println(
+                "  - Composition"
+        );
+
+        System.out.println(
+                "  - Interfaces"
+        );
+
+        System.out.println(
+                "  - Polymorphism"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Use the menu to explore the application."
+        );
+
+
+        /*
+         * ====================================================
+         * MAIN MENU
+         * ====================================================
+         */
+
+        boolean running = true;
+
+
+        while (running) {
+
+            System.out.println();
+
+            System.out.println(
+                    "----------------------- MAIN MENU ----------------------------"
+            );
+
+            System.out.println(
+                    "1. Display all assets"
+            );
+
+            System.out.println(
+                    "2. Generate asset reports"
+            );
+
+            System.out.println(
+                    "3. Display inheritance information"
+            );
+
+            System.out.println(
+                    "4. Display interface information"
+            );
+
+            System.out.println(
+                    "5. Demonstrate polymorphism"
+            );
+
+            System.out.println(
+                    "6. Exit"
+            );
+
+            System.out.println(
+                    "--------------------------------------------------------------"
+            );
+
+            System.out.print(
+                    "Enter your selection: "
+            );
+
+
+            String choice =
+                    scanner.nextLine();
+
+
+            switch (choice) {
+
+
+                /*
+                 * OPTION 1
+                 */
+
+                case "1":
+
+                    inventory.displayAllAssets();
+
+                    break;
+
+
+                /*
+                 * OPTION 2
+                 */
+
+                case "2":
+
+                    inventory.generateAllReports();
+
+                    break;
+
+
+                /*
+                 * OPTION 3
+                 */
+
+                case "3":
+
+                    System.out.println();
+
+                    System.out.println(
+                            "------------------ INHERITANCE DESIGN ----------------------"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Base Class: Asset"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Derived Class: Laptop"
+                    );
+
+                    System.out.println(
+                            "Laptop extends Asset"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Derived Class: Server"
+                    );
+
+                    System.out.println(
+                            "Server extends Asset"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Shared Asset functionality:"
+                    );
+
+                    System.out.println(
+                            "- Asset ID"
+                    );
+
+                    System.out.println(
+                            "- Description"
+                    );
+
+                    System.out.println(
+                            "- Assigned employee/team"
+                    );
+
+                    System.out.println(
+                            "- Asset type"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Laptop adds operating system information."
+                    );
+
+                    System.out.println(
+                            "Server adds environment information."
+                    );
+
+                    break;
+
+
+                /*
+                 * OPTION 4
+                 */
+
+                case "4":
+
+                    System.out.println();
+
+                    System.out.println(
+                            "-------------------- INTERFACE DESIGN ----------------------"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Interface Name: Reportable"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Method: generateReport()"
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Purpose:"
+                    );
+
+                    System.out.println(
+                            "Defines a common reporting contract."
+                    );
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Implementing Classes:"
+                    );
+
+                    System.out.println(
+                            "Laptop"
+                    );
+
+                    System.out.println(
+                            "Server"
+                    );
+
+                    break;
+
+
+                /*
+                 * OPTION 5
+                 */
+
+                case "5":
+
+                    inventory.demonstratePolymorphism();
+
+                    break;
+
+
+                /*
+                 * OPTION 6
+                 */
+
+                case "6":
+
+                    running = false;
+
+                    System.out.println();
+
+                    System.out.println(
+                            "=============================================================="
+                    );
+
+                    System.out.println(
+                            "Thank you for using the IT Asset Management System."
+                    );
+
+                    System.out.println(
+                            "Week 2 application complete."
+                    );
+
+                    System.out.println(
+                            "Goodbye, Todd!"
+                    );
+
+                    System.out.println(
+                            "=============================================================="
+                    );
+
+                    break;
+
+
+                /*
+                 * INVALID OPTION
+                 */
+
+                default:
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Invalid selection."
+                    );
+
+                    System.out.println(
+                            "Please enter a number from 1 through 6."
+                    );
+            }
+        }
+
+
+        scanner.close();
+    }
+}
+
+
+/*
+ * ============================================================
+ * LAPTOP CLASS
+ * ============================================================
+ *
+ * INHERITANCE:
+ *
+ * Laptop extends Asset.
+ *
+ * INTERFACE:
+ *
+ * Laptop implements Asset.Reportable.
+ */
+class Laptop extends Asset
+        implements Asset.Reportable {
+
+    private String operatingSystem;
+
+
+    /*
+     * Constructor.
+     */
+
+    public Laptop(
+            String assetId,
+            String description,
+            String assignedTo,
+            String operatingSystem) {
+
+        super(
+                assetId,
+                description,
+                assignedTo
+        );
+
+        this.operatingSystem =
+                operatingSystem;
+    }
+
+
+    /*
+     * Override asset type.
+     */
+
+    @Override
+    public String getAssetType() {
+
+        return "Laptop";
+    }
+
+
+    /*
+     * INTERFACE IMPLEMENTATION:
+     *
+     * Laptop implements the generateReport() method
+     * defined by Reportable.
+     */
+    @Override
+    public String generateReport() {
+
+        return "Laptop Report: "
+                + getAssetId()
+                + " | "
+                + getDescription()
+                + " | Assigned to: "
+                + getAssignedTo()
+                + " | OS: "
+                + operatingSystem;
+    }
+
+
+    /*
+     * POLYMORPHISM:
+     *
+     * Laptop overrides displayInfo().
+     */
+    @Override
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s OS: %s",
+                getAssetId(),
+                getAssetType(),
+                getDescription(),
+                getAssignedTo(),
+                operatingSystem
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * SERVER CLASS
+ * ============================================================
+ *
+ * INHERITANCE:
+ *
+ * Server extends Asset.
+ *
+ * INTERFACE:
+ *
+ * Server implements Asset.Reportable.
+ */
+class Server extends Asset
+        implements Asset.Reportable {
+
+    private String environment;
+
+
+    /*
+     * Constructor.
+     */
+
+    public Server(
+            String assetId,
+            String description,
+            String assignedTo,
+            String environment) {
+
+        super(
+                assetId,
+                description,
+                assignedTo
+        );
+
+        this.environment =
+                environment;
+    }
+
+
+    /*
+     * Override asset type.
+     */
+
+    @Override
+    public String getAssetType() {
+
+        return "Server";
+    }
+
+
+    /*
+     * INTERFACE IMPLEMENTATION:
+     *
+     * Server implements generateReport().
+     */
+    @Override
+    public String generateReport() {
+
+        return "Server Report: "
+                + getAssetId()
+                + " | "
+                + getDescription()
+                + " | Assigned to: "
+                + getAssignedTo()
+                + " | Environment: "
+                + environment;
+    }
+
+
+    /*
+     * POLYMORPHISM:
+     *
+     * Server overrides displayInfo().
+     */
+    @Override
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s Environment: %s",
+                getAssetId(),
+                getAssetType(),
+                getDescription(),
+                getAssignedTo(),
+                environment
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * ASSET INVENTORY CLASS
+ * ============================================================
+ *
+ * COMPOSITION:
+ *
+ * AssetInventory contains a collection of Asset objects.
+ */
+class AssetInventory {
+
+    /*
+     * COMPOSITION:
+     *
+     * AssetInventory owns a collection of Asset objects.
+     */
+    private final List<Asset> assets;
+
+
+    /*
+     * Constructor.
+     */
+
+    public AssetInventory() {
+
+        assets =
+                new ArrayList<>();
+    }
+
+
+    /*
+     * Add an asset.
+     */
+
+    public void addAsset(Asset asset) {
+
+        assets.add(asset);
+    }
+
+
+    /*
+     * ========================================================
+     * DISPLAY ALL ASSETS
+     * ========================================================
+     *
+     * POLYMORPHISM:
+     *
+     * The collection contains Asset references.
+     *
+     * The actual objects are Laptop and Server.
+     *
+     * Java automatically calls the appropriate overridden
+     * displayInfo() method.
+     */
+
+    public void displayAllAssets() {
+
+        System.out.println();
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println(
+                "                    IT ASSET INVENTORY"
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+
+
+        System.out.printf(
+                "%-10s %-12s %-25s %-20s%n",
+                "ID",
+                "TYPE",
+                "DESCRIPTION",
+                "ASSIGNED TO"
+        );
+
+
+        System.out.println(
+                "--------------------------------------------------------------"
+        );
+
+
+        for (Asset asset : assets) {
+
+            System.out.println(
+                    asset.displayInfo()
+            );
+        }
+
+
+        System.out.println(
+                "=============================================================="
+        );
+    }
+
+
+    /*
+     * ========================================================
+     * GENERATE REPORTS
+     * ========================================================
+     *
+     * POLYMORPHISM:
+     *
+     * We convert each Asset reference to the Reportable
+     * interface.
+     *
+     * Since Laptop and Server implement Reportable, this
+     * works for both types.
+     */
+
+    public void generateAllReports() {
+
+        System.out.println();
+
+        System.out.println(
+                "-------------------- ASSET REPORTS -------------------------"
+        );
+
+        System.out.println();
+
+
+        for (Asset asset : assets) {
+
+            /*
+             * INTERFACE + POLYMORPHISM:
+             *
+             * The Asset reference is treated as a Reportable
+             * reference.
+             */
+            Asset.Reportable report =
+                    (Asset.Reportable) asset;
+
+
+            System.out.println(
+                    report.generateReport()
+            );
+        }
+
+
+        System.out.println();
+    }
+
+
+    /*
+     * ========================================================
+     * POLYMORPHISM DEMONSTRATION
+     * ========================================================
+     */
+
+    public void demonstratePolymorphism() {
+
+        System.out.println();
+
+        System.out.println(
+                "------------------- POLYMORPHISM ---------------------------"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Different child objects are stored using"
+        );
+
+        System.out.println(
+                "the common Asset base-class reference."
+        );
+
+        System.out.println();
+
+
+        for (Asset asset : assets) {
+
+            System.out.println(
+                    "Reference Type: Asset"
+            );
+
+            System.out.println(
+                    "Actual Object Type: "
+                    + asset.getClass().getSimpleName()
+            );
+
+            System.out.println(
+                    "getAssetType(): "
+                    + asset.getAssetType()
+            );
+
+
+            /*
+             * POLYMORPHISM:
+             *
+             * Java determines at runtime whether the object
+             * is a Laptop or Server and calls the correct
+             * generateReport() implementation.
+             */
+            Asset.Reportable report =
+                    (Asset.Reportable) asset;
+
+
+            System.out.println(
+                    "generateReport():"
+            );
+
+            System.out.println(
+                    report.generateReport()
+            );
+
+            System.out.println(
+                    "--------------------------------------------------------------"
+            );
+        }
+
+
+        System.out.println();
+
+        System.out.println(
+                "POLYMORPHISM SUCCESSFULLY DEMONSTRATED."
+        );
+    }
+}
