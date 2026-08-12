@@ -1,232 +1,765 @@
-"""
-Header Documentation
--------------------------------------------------------------------------------
-Name:    [Your Name]
-Date:    August 4, 2026
-Purpose: Week 1 Term Project - Demonstrating Inheritance, Composition, 
-         and basic Console UI User Interactions for an Employee System.
--------------------------------------------------------------------------------
-"""
+/*
+ * ============================================================
+ * PROJECT WEEK 1
+ * Inheritance, Composition, and User Interactions
+ *
+ * Name: Todd Upshaw
+ * Date: August 11, 2026
+ *
+ * Purpose:
+ * This Java application demonstrates inheritance, composition,
+ * object instantiation, and basic user interaction through a
+ * console-based IT Asset Management System.
+ * ============================================================
+ */
 
-from abc import ABC, abstractmethod
-from typing import List
-
-
-# =============================================================================
-# 1. COMPOSITION CLASSES
-# =============================================================================
-
-class ContactInfo:
-    """
-    Demonstrates COMPOSITION.
-    This class holds communication metadata and will be composed INSIDE
-    the Employee base class.
-    """
-    def __init__(self, email: str, phone: str, office_location: str):
-        self.email = email
-        self.phone = phone
-        self.office_location = office_location
-
-    def get_contact_summary(self) -> str:
-        return f"{self.email} | Ph: {self.phone} | Office: {self.office_location}"
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 
-class Department:
-    """
-    Demonstrates COMPOSITION.
-    Represents an organizational unit embedded within an Employee record.
-    """
-    def __init__(self, dept_name: str, cost_center: str):
-        self.dept_name = dept_name
-        self.cost_center = cost_center
+/*
+ * ============================================================
+ * BASE CLASS / MAIN APPLICATION
+ * ============================================================
+ *
+ * Asset is the base class.
+ *
+ * This class also contains the main() method so the program
+ * can be executed directly as Asset.java.
+ */
+public class Asset {
 
-    def __str__(self) -> str:
-        return f"{self.dept_name} (CC-{self.cost_center})"
+    private String assetId;
+    private String description;
+    private String assignedTo;
 
+    /*
+     * Constructor for Asset.
+     */
+    public Asset(
+            String assetId,
+            String description,
+            String assignedTo) {
 
-# =============================================================================
-# 2. INHERITANCE: BASE CLASS
-# =============================================================================
+        this.assetId = assetId;
+        this.description = description;
+        this.assignedTo = assignedTo;
+    }
 
-class Employee(ABC):
-    """
-    Demonstrates INHERITANCE (Base / Parent Abstract Class).
-    Incorporates COMPOSITION by containing instance objects of ContactInfo 
-    and Department.
-    """
-    def __init__(self, emp_id: str, name: str, dept_name: str, cost_center: str, email: str, phone: str, office: str):
-        self.emp_id = emp_id
-        self.name = name
-        
-        # DEMONSTRATING COMPOSITION: Department & ContactInfo objects composed in Employee
-        self.department = Department(dept_name, cost_center)
-        self.contact_info = ContactInfo(email, phone, office)
+    /*
+     * Getters.
+     */
+    public String getAssetId() {
+        return assetId;
+    }
 
-    @abstractmethod
-    def calculate_pay(self) -> float:
-        """Abstract method to be overridden by derived classes."""
-        pass
+    public String getDescription() {
+        return description;
+    }
 
-    @abstractmethod
-    def get_pay_details(self) -> str:
-        """Returns string representation of pay structure."""
-        pass
+    public String getAssignedTo() {
+        return assignedTo;
+    }
 
-    def display_row(self) -> str:
-        """Formats employee details for tabular display."""
-        return (f"{self.emp_id:<6} | {self.name:<18} | {self.department.dept_name:<12} | "
-                f"{self.get_pay_details():<22} | {self.contact_info.email}")
+    /*
+     * Setter.
+     */
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
 
+    /*
+     * Returns the type of asset.
+     */
+    public String getAssetType() {
+        return "General Asset";
+    }
 
-# =============================================================================
-# 3. INHERITANCE: DERIVED / CHILD CLASSES
-# =============================================================================
+    /*
+     * Formats asset information for display.
+     */
+    public String displayInfo() {
 
-class SalariedEmployee(Employee):
-    """
-    Demonstrates INHERITANCE (Derived / Child Class #1).
-    Inherits from base class Employee and overrides pay calculation logic.
-    """
-    def __init__(self, emp_id: str, name: str, dept_name: str, cost_center: str, 
-                 email: str, phone: str, office: str, annual_salary: float):
-        super().__init__(emp_id, name, dept_name, cost_center, email, phone, office)
-        self.annual_salary = annual_salary
-
-    def calculate_pay(self) -> float:
-        # Bi-weekly pay calculation
-        return round(self.annual_salary / 26, 2)
-
-    def get_pay_details(self) -> str:
-        return f"${self.annual_salary:,.2f}/yr (Salaried)"
-
-
-class HourlyEmployee(Employee):
-    """
-    Demonstrates INHERITANCE (Derived / Child Class #2).
-    Inherits from base class Employee and adds hourly-specific attributes.
-    """
-    def __init__(self, emp_id: str, name: str, dept_name: str, cost_center: str, 
-                 email: str, phone: str, office: str, hourly_rate: float, hours_worked: float):
-        super().__init__(emp_id, name, dept_name, cost_center, email, phone, office)
-        self.hourly_rate = hourly_rate
-        self.hours_worked = hours_worked
-
-    def calculate_pay(self) -> float:
-        # Standard pay + overtime calculation (> 40 hrs)
-        if self.hours_worked <= 40:
-            return round(self.hourly_rate * self.hours_worked, 2)
-        else:
-            overtime_hours = self.hours_worked - 40
-            return round((40 * self.hourly_rate) + (overtime_hours * self.hourly_rate * 1.5), 2)
-
-    def get_pay_details(self) -> str:
-        return f"${self.hourly_rate:.2f}/hr ({self.hours_worked} hrs)"
+        return String.format(
+                "%-10s %-12s %-25s %-20s",
+                assetId,
+                getAssetType(),
+                description,
+                assignedTo
+        );
+    }
 
 
-# =============================================================================
-# 4. USER INTERACTION & MANAGEMENT SYSTEM
-# =============================================================================
+    /*
+     * ========================================================
+     * MAIN METHOD
+     * ========================================================
+     */
+    public static void main(String[] args) {
 
-class EmployeeManagementSystem:
-    """Manages system state, sample instantiation, and UI interaction loop."""
-    
-    def __init__(self):
-        self.employees: List[Employee] = []
-        self._seed_sample_data()
+        Scanner scanner = new Scanner(System.in);
 
-    def _seed_sample_data(self):
-        """Instantiates classes with realistic sample information."""
-        emp1 = SalariedEmployee(
-            emp_id="E101",
-            name="Sarah Connor",
-            dept_name="Engineering",
-            cost_center="101",
-            email="s.connor@corp.com",
-            phone="555-0192",
-            office="Bldg A - 302",
-            annual_salary=95000.00
-        )
-        emp2 = HourlyEmployee(
-            emp_id="E102",
-            name="Marcus Wright",
-            dept_name="Operations",
-            cost_center="204",
-            email="m.wright@corp.com",
-            phone="555-0144",
-            office="Bldg B - 105",
-            hourly_rate=35.50,
-            hours_worked=45.0
-        )
-        emp3 = SalariedEmployee(
-            emp_id="E103",
-            name="Ellen Ripley",
-            dept_name="Security",
-            cost_center="901",
-            email="e.ripley@corp.com",
-            phone="555-0881",
-            office="Bldg C - 101",
-            annual_salary=110000.00
-        )
-        self.employees.extend([emp1, emp2, emp3])
+        /*
+         * COMPOSITION:
+         *
+         * The AssetInventory object manages a collection
+         * of Asset objects.
+         */
+        AssetInventory inventory = new AssetInventory();
 
-    def display_header(self):
-        print("=" * 85)
-        print("  COURSE PROJECT WEEK 1: INHERITANCE & COMPOSITION DEMO")
-        print("  Assignment: User Interactions & OOP Class Architecture")
-        print("  Student Name: [Your Name]")
-        print("=" * 85)
-        print("\nWELCOME to the Employee Management System!")
-        print("Use the menu options below to view records and interact with the system.\n")
+        /*
+         * Load realistic sample data.
+         */
+        inventory.addAsset(
+                new Laptop(
+                        "LAP-1001",
+                        "Dell Latitude 5540",
+                        "Sarah Johnson",
+                        "Windows 11 Pro"
+                )
+        );
 
-    def display_menu(self):
-        print("-" * 35 + " MAIN MENU " + "-" * 35)
-        print("1. Display Brief Employee List")
-        print("2. Display Detailed Roster (Tabular View with Composition & Inheritance Data)")
-        print("3. Add New Employee (Simulated Action)")
-        print("4. Delete Employee (Simulated Action)")
-        print("5. Exit System")
-        print("-" * 81)
+        inventory.addAsset(
+                new Laptop(
+                        "LAP-1002",
+                        "Lenovo ThinkPad T14",
+                        "Michael Carter",
+                        "Windows 11 Pro"
+                )
+        );
 
-    def display_brief_list(self):
-        print("\n--- BRIEF EMPLOYEE LIST ---")
-        for emp in self.employees:
-            print(f" • [{emp.emp_id}] {emp.name} - Dept: {emp.department.dept_name}")
-        print()
-
-    def display_detailed_roster(self):
-        print("\n--- DETAILED EMPLOYEE ROSTER ---")
-        print(f"{'ID':<6} | {'Name':<18} | {'Department':<12} | {'Pay Details':<22} | Contact Email")
-        print("-" * 85)
-        for emp in self.employees:
-            print(emp.display_row())
-        print("-" * 85)
-        print()
-
-    def run(self):
-        self.display_header()
-        while True:
-            self.display_menu()
-            choice = input("Select an option (1-5): ").strip()
-            
-            if choice == "1":
-                self.display_brief_list()
-            elif choice == "2":
-                self.display_detailed_roster()
-            elif choice == "3":
-                print("\n[INFO] 'Add Employee' feature queued for Week 2 implementation.\n")
-            elif choice == "4":
-                print("\n[INFO] 'Delete Employee' feature queued for Week 2 implementation.\n")
-            elif choice == "5" or choice.lower() == "exit":
-                print("\nThank you for evaluating Phase 1. Exiting application...\n")
-                break
-            else:
-                print("\n[ERROR] Invalid choice. Please enter a number between 1 and 5.\n")
+        inventory.addAsset(
+                new Server(
+                        "SRV-2001",
+                        "Application Server",
+                        "DevOps Team",
+                        "Production"
+                )
+        );
 
 
-# =============================================================================
-# PROGRAM ENTRY POINT
-# =============================================================================
+        /*
+         * ====================================================
+         * WELCOME SCREEN
+         * ====================================================
+         */
 
-if __name__ == "__main__":
-    app = EmployeeManagementSystem()
-    app.run()
+        System.out.println();
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println(
+                "                       PROJECT WEEK 1"
+        );
+
+        System.out.println(
+                "        INHERITANCE, COMPOSITION, AND USER INTERACTIONS"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "                IT ASSET MANAGEMENT SYSTEM"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "                       Todd Upshaw"
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Welcome to the IT Asset Management System!"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "This application allows you to manage IT assets."
+        );
+
+        System.out.println(
+                "You can display, add, update, or delete assets."
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "The application demonstrates:"
+        );
+
+        System.out.println(
+                "  - Inheritance"
+        );
+
+        System.out.println(
+                "  - Composition"
+        );
+
+        System.out.println(
+                "  - Object-oriented programming"
+        );
+
+        System.out.println(
+                "  - User input and output"
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+
+
+        /*
+         * ====================================================
+         * MAIN MENU LOOP
+         * ====================================================
+         */
+
+        boolean running = true;
+
+        while (running) {
+
+            System.out.println();
+            System.out.println(
+                    "----------------------- MAIN MENU ----------------------------"
+            );
+
+            System.out.println("1. Display all assets");
+            System.out.println("2. Add laptop");
+            System.out.println("3. Add server");
+            System.out.println("4. Update asset assignment");
+            System.out.println("5. Delete asset");
+            System.out.println("6. Exit");
+
+            System.out.println(
+                    "--------------------------------------------------------------"
+            );
+
+            System.out.print(
+                    "Enter your selection: "
+            );
+
+            String choice = scanner.nextLine();
+
+
+            /*
+             * Process the user's selection.
+             */
+            switch (choice) {
+
+                case "1":
+
+                    inventory.displayAllAssets();
+
+                    break;
+
+
+                case "2":
+
+                    System.out.println();
+                    System.out.println(
+                            "----------------------- ADD LAPTOP ---------------------------"
+                    );
+
+                    System.out.print(
+                            "Enter Asset ID: "
+                    );
+
+                    String laptopId = scanner.nextLine();
+
+                    System.out.print(
+                            "Enter laptop description: "
+                    );
+
+                    String laptopDescription =
+                            scanner.nextLine();
+
+                    System.out.print(
+                            "Enter assigned employee/team: "
+                    );
+
+                    String laptopAssignedTo =
+                            scanner.nextLine();
+
+                    System.out.print(
+                            "Enter operating system: "
+                    );
+
+                    String operatingSystem =
+                            scanner.nextLine();
+
+
+                    /*
+                     * INHERITANCE:
+                     *
+                     * Laptop inherits from Asset.
+                     */
+                    Laptop laptop = new Laptop(
+                            laptopId,
+                            laptopDescription,
+                            laptopAssignedTo,
+                            operatingSystem
+                    );
+
+
+                    /*
+                     * COMPOSITION:
+                     *
+                     * Add the Laptop object to AssetInventory.
+                     */
+                    inventory.addAsset(laptop);
+
+                    System.out.println(
+                            "Laptop added successfully."
+                    );
+
+                    break;
+
+
+                case "3":
+
+                    System.out.println();
+                    System.out.println(
+                            "----------------------- ADD SERVER ---------------------------"
+                    );
+
+                    System.out.print(
+                            "Enter Asset ID: "
+                    );
+
+                    String serverId = scanner.nextLine();
+
+                    System.out.print(
+                            "Enter server description: "
+                    );
+
+                    String serverDescription =
+                            scanner.nextLine();
+
+                    System.out.print(
+                            "Enter assigned employee/team: "
+                    );
+
+                    String serverAssignedTo =
+                            scanner.nextLine();
+
+                    System.out.print(
+                            "Enter server environment: "
+                    );
+
+                    String environment =
+                            scanner.nextLine();
+
+
+                    /*
+                     * INHERITANCE:
+                     *
+                     * Server inherits from Asset.
+                     */
+                    Server server = new Server(
+                            serverId,
+                            serverDescription,
+                            serverAssignedTo,
+                            environment
+                    );
+
+
+                    /*
+                     * COMPOSITION:
+                     *
+                     * Add Server to AssetInventory.
+                     */
+                    inventory.addAsset(server);
+
+                    System.out.println(
+                            "Server added successfully."
+                    );
+
+                    break;
+
+
+                case "4":
+
+                    System.out.println();
+                    System.out.println(
+                            "--------------------- UPDATE ASSET --------------------------"
+                    );
+
+                    System.out.print(
+                            "Enter Asset ID: "
+                    );
+
+                    String updateId =
+                            scanner.nextLine();
+
+                    System.out.print(
+                            "Enter new employee/team assignment: "
+                    );
+
+                    String newAssignee =
+                            scanner.nextLine();
+
+                    inventory.updateAssignment(
+                            updateId,
+                            newAssignee
+                    );
+
+                    break;
+
+
+                case "5":
+
+                    System.out.println();
+                    System.out.println(
+                            "--------------------- DELETE ASSET --------------------------"
+                    );
+
+                    System.out.print(
+                            "Enter Asset ID to delete: "
+                    );
+
+                    String deleteId =
+                            scanner.nextLine();
+
+                    inventory.deleteAsset(deleteId);
+
+                    break;
+
+
+                case "6":
+
+                    running = false;
+
+                    System.out.println();
+                    System.out.println(
+                            "=============================================================="
+                    );
+
+                    System.out.println(
+                            "Thank you for using the IT Asset Management System."
+                    );
+
+                    System.out.println(
+                            "Goodbye, Todd!"
+                    );
+
+                    System.out.println(
+                            "=============================================================="
+                    );
+
+                    break;
+
+
+                default:
+
+                    System.out.println();
+
+                    System.out.println(
+                            "Invalid selection."
+                    );
+
+                    System.out.println(
+                            "Please enter a number from 1 through 6."
+                    );
+            }
+        }
+
+        scanner.close();
+    }
+}
+
+
+/*
+ * ============================================================
+ * CHILD CLASS - LAPTOP
+ * ============================================================
+ *
+ * INHERITANCE:
+ *
+ * Laptop extends Asset.
+ */
+class Laptop extends Asset {
+
+    private String operatingSystem;
+
+
+    public Laptop(
+            String assetId,
+            String description,
+            String assignedTo,
+            String operatingSystem) {
+
+        super(
+                assetId,
+                description,
+                assignedTo
+        );
+
+        this.operatingSystem =
+                operatingSystem;
+    }
+
+
+    /*
+     * INHERITANCE:
+     *
+     * Override getAssetType().
+     */
+    @Override
+    public String getAssetType() {
+
+        return "Laptop";
+    }
+
+
+    /*
+     * Override displayInfo().
+     */
+    @Override
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s OS: %s",
+                getAssetId(),
+                getAssetType(),
+                getDescription(),
+                getAssignedTo(),
+                operatingSystem
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * CHILD CLASS - SERVER
+ * ============================================================
+ *
+ * INHERITANCE:
+ *
+ * Server extends Asset.
+ */
+class Server extends Asset {
+
+    private String environment;
+
+
+    public Server(
+            String assetId,
+            String description,
+            String assignedTo,
+            String environment) {
+
+        super(
+                assetId,
+                description,
+                assignedTo
+        );
+
+        this.environment =
+                environment;
+    }
+
+
+    /*
+     * INHERITANCE:
+     *
+     * Override getAssetType().
+     */
+    @Override
+    public String getAssetType() {
+
+        return "Server";
+    }
+
+
+    /*
+     * Override displayInfo().
+     */
+    @Override
+    public String displayInfo() {
+
+        return String.format(
+                "%-10s %-12s %-25s %-20s Environment: %s",
+                getAssetId(),
+                getAssetType(),
+                getDescription(),
+                getAssignedTo(),
+                environment
+        );
+    }
+}
+
+
+/*
+ * ============================================================
+ * COMPOSITION CLASS
+ * ============================================================
+ *
+ * AssetInventory demonstrates COMPOSITION.
+ *
+ * It contains a collection of Asset objects.
+ */
+class AssetInventory {
+
+    /*
+     * COMPOSITION:
+     *
+     * AssetInventory owns a collection of Asset objects.
+     *
+     * final prevents the reference from being reassigned.
+     * Assets can still be added and removed from the list.
+     */
+    private final List<Asset> assets;
+
+
+    public AssetInventory() {
+
+        assets = new ArrayList<>();
+    }
+
+
+    /*
+     * Add an Asset to the inventory.
+     */
+    public void addAsset(Asset asset) {
+
+        assets.add(asset);
+    }
+
+
+    /*
+     * Display all assets.
+     */
+    public void displayAllAssets() {
+
+        if (assets.isEmpty()) {
+
+            System.out.println();
+            System.out.println(
+                    "No assets are currently stored."
+            );
+
+            return;
+        }
+
+
+        System.out.println();
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.println(
+                "                    IT ASSET INVENTORY"
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+
+
+        System.out.printf(
+                "%-10s %-12s %-25s %-20s%n",
+                "ID",
+                "TYPE",
+                "DESCRIPTION",
+                "ASSIGNED TO"
+        );
+
+
+        System.out.println(
+                "--------------------------------------------------------------"
+        );
+
+
+        for (Asset asset : assets) {
+
+            System.out.println(
+                    asset.displayInfo()
+            );
+        }
+
+
+        System.out.println(
+                "=============================================================="
+        );
+    }
+
+
+    /*
+     * Update an asset assignment.
+     */
+    public void updateAssignment(
+            String assetId,
+            String newAssignee) {
+
+        for (Asset asset : assets) {
+
+            if (asset.getAssetId()
+                    .equalsIgnoreCase(assetId)) {
+
+                asset.setAssignedTo(
+                        newAssignee
+                );
+
+                System.out.println();
+
+                System.out.println(
+                        "Asset assignment updated successfully."
+                );
+
+                return;
+            }
+        }
+
+
+        System.out.println();
+
+        System.out.println(
+                "Asset ID was not found."
+        );
+    }
+
+
+    /*
+     * Delete an asset.
+     */
+    public void deleteAsset(
+            String assetId) {
+
+        for (int i = 0;
+             i < assets.size();
+             i++) {
+
+            if (assets.get(i)
+                    .getAssetId()
+                    .equalsIgnoreCase(assetId)) {
+
+                assets.remove(i);
+
+                System.out.println();
+
+                System.out.println(
+                        "Asset deleted successfully."
+                );
+
+                return;
+            }
+        }
+
+
+        System.out.println();
+
+        System.out.println(
+                "Asset ID was not found."
+        );
+    }
+}
